@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм»
 
 * Студент: [Дмитрий Мартынов](https://up.htmlacademy.ru/javascript/29/user/2249401).
-* Наставник: [Павел Лукин] (https://htmlacademy.ru/profile/id1313529).
+* Наставник: [Павел Лукин](https://htmlacademy.ru/profile/id1313529).
 
 ---
 
