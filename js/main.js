@@ -63,7 +63,7 @@ const commentsVariety = () => ({
   name: getRandomArrayElement(NAMES),
 });
 
-const comment = Array.from({length: getRandomInteger(0, 30) }, commentsVariety);
+const createComments = () => Array.from({length: getRandomInteger(0, 30) }, commentsVariety);
 
 // ВЫСТРАИВАНИЕ ОСНОВНОГО ОБЪЕКТА
 
@@ -72,7 +72,7 @@ const createObject = () => ({
   url: `photos/${getUniqueInteger(1, 25)()}.jpg`,
   description: 'Это картинка в Кекстаграмме',
   likes: getUniqueInteger(15, 200)(),
-  comments: comment,
+  comments: createComments(),
 });
 
-createObject();
+const object = Array.from({length: 25}, createObject);
