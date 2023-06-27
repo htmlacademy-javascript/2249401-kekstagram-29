@@ -75,4 +75,4 @@ const createObject = () => ({
   comments: createComments(),
 });
 
-const object = Array.from({length: 25}, createObject);
+createObject();
