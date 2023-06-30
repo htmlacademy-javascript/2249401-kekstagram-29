@@ -1,4 +1,4 @@
-import { getRandomInteger, getUniqueInteger, getRandomArrayElement } from '.util/js';
+import { getRandomInteger, getUniqueInteger, getRandomArrayElement } from './util.js';
 // настройка комментария
 
 const COMMENTSMESSAGE = [
