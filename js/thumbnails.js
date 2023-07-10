@@ -16,4 +16,5 @@ similarThumbnails.forEach(({url, description, likes, comments}) => {
   thumbnailsFragment.append(thumbnailItem);
 });
 // добавление миниатюры в контейнер
-picturesContainer.append(thumbnailsFragment);
+const addThumbnail = () => picturesContainer.append(thumbnailsFragment);
+addThumbnail();
