@@ -1,6 +1,6 @@
-import { getRandomInteger, getUniqueInteger, getRandomArrayElement } from './util.js';
-// настройка комментария
+import { getRandomInteger, getUniqueInteger, getRandomArrayElement } from './utils.js';
 
+// настройка комментария
 const COMMENTSMESSAGE = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
@@ -33,12 +33,31 @@ const createComments = () => Array.from({ length: getRandomInteger(0, 30) }, com
 
 // ВЫСТРАИВАНИЕ ОСНОВНОГО ОБЪЕКТА
 
-const createObject = () => ({
-  id: getUniqueInteger(1, 25)(),
-  url: `photos/${getUniqueInteger(1, 25)()}.jpg`,
-  description: 'Это картинка в Кекстаграмме',
-  likes: getUniqueInteger(15, 200)(),
-  comments: createComments(),
-});
+const createObjects = () => {
+  const createdObjects = [];
 
-export {createObject};
+  const createObject = () => {
+    const id = getUniqueInteger(1, 25)();
+    const url = `photos/${getUniqueInteger(1, 25)()}.jpg`;
+
+    // Проверяем, чтобы id и url были уникальными
+    if (createdObjects.some((obj) => obj.id === id) || createdObjects.some((obj) => obj.url === url)) {
+      return createObject(); // Если не уникально, вызываем функцию заново
+    }
+
+    const newObject = {
+      id: id,
+      url: url,
+      description: 'Это картинка в Кекстаграмме',
+      likes: getUniqueInteger(15, 200)(),
+      comments: createComments(),
+    };
+
+    createdObjects.push(newObject);
+
+    return newObject;
+  };
+
+  return Array.from({ length: 25 }, createObject);
+};
+export {createObjects};

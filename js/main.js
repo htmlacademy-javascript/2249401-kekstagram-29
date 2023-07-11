@@ -1,5 +1,5 @@
-import { createObject } from './data.js';
+import { createObjects } from './data.js';
 import { addThumbnail } from './thumbnails.js';
 
-createObject();
-addThumbnail();
+createObjects();
+addThumbnail(createObjects());
