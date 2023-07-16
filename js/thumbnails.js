@@ -1,3 +1,5 @@
+import { createObjects } from './data.js';
+
 const picturesContainer = document.querySelector('.pictures');
 const thumbnailTemplate = document.querySelector('#picture').content.querySelector('.picture');
 const thumbnailsFragment = document.createDocumentFragment();
@@ -17,4 +19,6 @@ const addThumbnail = (similarThumbnails) => {
 };
 // добавление миниатюры в контейнер
 
-export { addThumbnail };
+const createThumbnails = () => addThumbnail(createObjects());
+
+export { createThumbnails };

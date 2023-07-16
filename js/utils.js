@@ -23,4 +23,4 @@ const getUniqueInteger = (min, max) => {
 
 const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
 
-export {getRandomInteger, getUniqueInteger, getRandomArrayElement};
+export { getRandomInteger, getUniqueInteger, getRandomArrayElement };
