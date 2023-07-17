@@ -1,15 +1,19 @@
-import { createThumbnails } from './thumbnails.js';
+// import { createThumbnails } from './thumbnails.js';
 
-createThumbnails();
+// createThumbnails();
 
+const bodyElement = document.querySelector('body');
 const picturesContainer = document.querySelector('.pictures');
+
 const openedPicture = document.querySelector('.big-picture');
 const thumbnailImage = openedPicture.querySelector('img');
 const pictureLikes = openedPicture.querySelector('.likes-count');
 const pictureComments = openedPicture.querySelector('.comments-count');
+
 const closeButton = openedPicture.querySelector('.big-picture__cancel');
-const bodyElement = document.querySelector('body');
+
 const commentsContainer = openedPicture.querySelector('.social__comments');
+const commentElement = openedPicture.querySelector('.social__comment');
 const commentCountElement = openedPicture.querySelector('.social__comment-count');
 const commentsLoaderElement = openedPicture.querySelector('.comments-loader');
 const socialCaptionElement = openedPicture.querySelector('.social__caption');
@@ -20,17 +24,22 @@ const onEscKeyDown = (evt) => {
   }
 };
 
-const openThumbnail = (url, likes, comments, description) => {
+const createComment = ({avatar, name, message}) => {
+  const comment = commentElement.cloneNode(true);
+
+  comment.querySelector('.social-picture') = avatar;
+  comment.querySelector('.socila-picture').alt = name;
+  comment.querySelector('.social-text').textContent = message;
+
+  return comment;
+};
+
+const openThumbnail = (url, likes, description) => {
   thumbnailImage.src = url;
   pictureLikes.textContent = likes;
-  pictureComments.textContent = comments.length;
   socialCaptionElement.textContent = description;
 
-  // Очищаем контейнер с комментариями
-  commentsContainer.innerHTML = '';
-
-  // Добавляем комментарии в контейнер
-  comments.forEach(({ avatar, name, text }) => {
+/*   comments.forEach(({ avatar, name, text }) => {
     const commentElement = document.createElement('li');
     commentElement.classList.add('social__comment');
     commentElement.innerHTML = `
@@ -38,19 +47,12 @@ const openThumbnail = (url, likes, comments, description) => {
       <p class="social__text">${text}</p>
     `;
     commentsContainer.appendChild(commentElement);
-  });
+  }); */
 
-  // Скрываем счетчик комментариев и загрузчик новых комментариев
+  openedPicture.classList.remove('hidden');
   commentCountElement.classList.add('hidden');
   commentsLoaderElement.classList.add('hidden');
-
-  // Добавляем класс для блокировки скролла на фоновом контейнере
   bodyElement.classList.add('modal-open');
-
-  // Открываем окно
-  openedPicture.classList.remove('hidden');
-
-  // Добавляем обработчик для закрытия окна по нажатию клавиши Esc
   document.addEventListener('keydown', onEscKeyDown);
 };
 
@@ -63,14 +65,16 @@ const closeThumbnail = () => {
 
 closeButton.addEventListener('click', closeThumbnail);
 
-picturesContainer.addEventListener('click', (evt) => {
+const onModalOpen = () => picturesContainer.addEventListener('click', (evt) => {
   const clickedThumbnail = evt.target.closest('.picture');
   if (clickedThumbnail) {
     const url = clickedThumbnail.querySelector('.picture__img').src;
     const description = clickedThumbnail.querySelector('.picture__img').alt;
     const likes = clickedThumbnail.querySelector('.picture__likes').textContent;
-    const comments = []; // Получить комментарии соответствующей фотографии
+    const comments = [];
 
     openThumbnail(url, likes, comments, description);
   }
 });
+
+export { onModalOpen };

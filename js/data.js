@@ -1,4 +1,4 @@
-import { getRandomInteger, getUniqueInteger, getRandomArrayElement } from './utils.js';
+import { getRandomInteger, getUniqueInteger, getRandomArrayElement, getId } from './utils.js';
 
 // настройка комментария
 const COMMENTSMESSAGE = [
@@ -22,28 +22,25 @@ const NAMES = [
 
 // ВЫСТРАИВАНИЕ КОММЕНТАРИЯ
 
-const commentsVariety = () => ({
+const createCommentsVariety = () => ({
   id: getUniqueInteger(1, Math.round(Math.random() * 100))(),
   avatar: `img/avatar-${getUniqueInteger(1, 6)()}.svg`,
   message: getRandomArrayElement(COMMENTSMESSAGE),
   name: getRandomArrayElement(NAMES),
 });
 
-const createComments = () => Array.from({ length: getRandomInteger(0, 30) }, commentsVariety);
+const createComments = () => Array.from({ length: getRandomInteger(0, 30) }, createCommentsVariety);
 
 // ВЫСТРАИВАНИЕ ОСНОВНОГО ОБЪЕКТА
+
+const getPhotoID = getId();
 
 const createObjects = () => {
   const createdObjects = [];
 
-  const createObject = () => {
-    const id = getUniqueInteger(1, 25)();
-    const url = `photos/${getUniqueInteger(1, 25)()}.jpg`;
-
-    // Проверяем, чтобы id и url были уникальными
-    if (createdObjects.some((obj) => obj.id === id) || createdObjects.some((obj) => obj.url === url)) {
-      return createObject(); // Если не уникально, вызываем функцию заново
-    }
+  for (let i = 0; i < 25; i++) {
+    const id = getPhotoID();
+    const url = `photos/${id}.jpg`;
 
     const newObject = {
       id: id,
@@ -54,10 +51,32 @@ const createObjects = () => {
     };
 
     createdObjects.push(newObject);
+  }
 
-    return newObject;
-  };
-
-  return Array.from({ length: 25 }, createObject);
+  return createdObjects;
 };
-export {createObjects};
+
+/*
+const createObjects = () => {
+  const createdObjects = [];
+
+  for (let i = 0; i <= 25; i++) {
+    const id = i + 1;
+    const url = `photos/${i + 1}.jpg`;
+  }
+
+  const newObject = () => ({
+    id: id,
+    url: url,
+    description: 'Это картинка в Кекстаграмме',
+    likes: getUniqueInteger(15, 200)(),
+    comments: createComments(),
+  });
+
+  createdObjects.push(newObject);
+
+  return createdObjects;
+};
+ */
+
+export { createObjects };
