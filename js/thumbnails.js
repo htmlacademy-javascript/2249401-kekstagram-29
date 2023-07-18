@@ -1,19 +1,27 @@
-import { createObject } from './data.js';
+import { openPictureModal } from './modal.js';
 
-// объявление переменных
-const picturesContainer = document.querySelector('.pictures');
+const thumbnailElement = document.querySelector('.pictures');
 const thumbnailTemplate = document.querySelector('#picture').content.querySelector('.picture');
-const similarThumbnails = createObject();
-const thumbnailsFragment = document.createDocumentFragment();
-// генератор миниатюр
 
-similarThumbnails.forEach(({url, description, likes, comments}) => {
-  const thumbnailItem = thumbnailTemplate.cloneNode(true);
-  thumbnailItem.querySelector('.picture__img').src = url;
-  thumbnailItem.querySelector('.picture__img').alt = description;
-  thumbnailItem.querySelector('.picture__likes').textContent = likes;
-  thumbnailItem.querySelector('.picture__comments').textContent = comments;
-  thumbnailsFragment.append(thumbnailItem);
-});
-// добавление миниатюры в контейнер
-picturesContainer.append(thumbnailsFragment);
+const createThumbnailElement = ({ url, likes, comments, description }) => {
+  const element = thumbnailTemplate.cloneNode(true);
+  element.querySelector('.picture__img').src = url;
+  element.querySelector('.picture__likes').textContent = likes;
+  element.querySelector('.picture__comments').textContent = comments.length;
+  element.querySelector('.picture__img').alt = description;
+
+
+  // Добавляем обработчик события для открытия модального окна
+  element.addEventListener('click', () => openPictureModal(url, likes, comments, description));
+
+  return element;
+};
+
+const addThumbnail = (similarThumbnails) => {
+  similarThumbnails = Array.from(similarThumbnails);
+  thumbnailElement.querySelectorAll('.picture').forEach((element) => element.remove());
+  const thumbnailElements = similarThumbnails.map(createThumbnailElement);
+  thumbnailElement.append(...thumbnailElements);
+};
+
+export { addThumbnail };
