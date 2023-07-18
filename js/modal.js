@@ -1,80 +1,73 @@
-// import { createThumbnails } from './thumbnails.js';
-
-// createThumbnails();
-
-const bodyElement = document.querySelector('body');
-const picturesContainer = document.querySelector('.pictures');
+import { isAcceptKey, isEscapeKey } from './utils.js';
 
 const openedPicture = document.querySelector('.big-picture');
 const thumbnailImage = openedPicture.querySelector('img');
-const pictureLikes = openedPicture.querySelector('.likes-count');
-const pictureComments = openedPicture.querySelector('.comments-count');
+const likesCount = openedPicture.querySelector('.likes-count');
+const commentsCount = openedPicture.querySelector('.comments-count');
+const socialCaptionElement = openedPicture.querySelector('.social__caption');
 
 const closeButton = openedPicture.querySelector('.big-picture__cancel');
 
 const commentsContainer = openedPicture.querySelector('.social__comments');
 const commentElement = openedPicture.querySelector('.social__comment');
-const commentCountElement = openedPicture.querySelector('.social__comment-count');
-const commentsLoaderElement = openedPicture.querySelector('.comments-loader');
-const socialCaptionElement = openedPicture.querySelector('.social__caption');
+// const commentCountElement = openedPicture.querySelector('.social__comment-count');
+// const commentsLoaderElement = openedPicture.querySelector('.comments-loader');
 
-const onEscKeyDown = (evt) => {
-  if (evt.key === 'Escape') {
-    openedPicture.classList.add('hidden');
-  }
-};
-
-const createComment = ({avatar, name, message}) => {
-  const comment = commentElement.cloneNode(true);
-
-  comment.querySelector('.social-picture') = avatar;
-  comment.querySelector('.socila-picture').alt = name;
-  comment.querySelector('.social-text').textContent = message;
-
-  return comment;
-};
-
-const openThumbnail = (url, likes, description) => {
-  thumbnailImage.src = url;
-  pictureLikes.textContent = likes;
-  socialCaptionElement.textContent = description;
-
-/*   comments.forEach(({ avatar, name, text }) => {
-    const commentElement = document.createElement('li');
-    commentElement.classList.add('social__comment');
-    commentElement.innerHTML = `
-      <img class="social__picture" src="${avatar}" alt="${name}" width="35" height="35">
-      <p class="social__text">${text}</p>
-    `;
-    commentsContainer.appendChild(commentElement);
-  }); */
-
-  openedPicture.classList.remove('hidden');
-  commentCountElement.classList.add('hidden');
-  commentsLoaderElement.classList.add('hidden');
-  bodyElement.classList.add('modal-open');
-  document.addEventListener('keydown', onEscKeyDown);
-};
-
-const closeThumbnail = () => {
+const closeModal = () => {
+  document.body.classList.remove('modal-open');
   openedPicture.classList.add('hidden');
 
-  // Удаляем обработчик для закрытия окна по нажатию клавиши Esc
-  document.removeEventListener('keydown', onEscKeyDown);
+  document.removeEventListener('keydown', onDocumentKeydown);
 };
 
-closeButton.addEventListener('click', closeThumbnail);
-
-const onModalOpen = () => picturesContainer.addEventListener('click', (evt) => {
-  const clickedThumbnail = evt.target.closest('.picture');
-  if (clickedThumbnail) {
-    const url = clickedThumbnail.querySelector('.picture__img').src;
-    const description = clickedThumbnail.querySelector('.picture__img').alt;
-    const likes = clickedThumbnail.querySelector('.picture__likes').textContent;
-    const comments = [];
-
-    openThumbnail(url, likes, comments, description);
+function onDocumentKeydown(evt) {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closeModal();
   }
-});
+}
 
-export { onModalOpen };
+const onCloseButtonClick = closeModal;
+const onAcceptButtonKeydown = (evt) => {
+  if (isAcceptKey(evt)) {
+    evt.preventDefault();
+    closeModal();
+  }
+};
+
+closeButton.addEventListener('click', onCloseButtonClick);
+document.addEventListener('keydown', onAcceptButtonKeydown);
+
+const createComment = ({ name, avatar, message }) => {
+  const newComment = commentElement.cloneNode(true);
+  const commentPicture = newComment.querySelector('.social__picture');
+
+  commentPicture.src = avatar;
+  commentPicture.alt = name;
+  newComment.querySelector('.social__text').textContent = message;
+
+  return newComment;
+};
+
+const renderComments = (comments) => commentsContainer.append(...comments.map(createComment));
+
+const clearComments = () => (commentsContainer.innerHTML = '');
+
+const openPictureModal = (url, likes, comments, description) => {
+  document.body.classList.add('modal-open');
+  openedPicture.classList.remove('hidden');
+
+  thumbnailImage.src = url;
+  thumbnailImage.alt = description;
+  likesCount.textContent = likes;
+  commentsCount.textContent = comments.length;
+  socialCaptionElement.textContent = description;
+
+  clearComments();
+  renderComments(comments);
+
+  document.addEventListener('keydown', onDocumentKeydown);
+};
+
+
+export { openPictureModal };

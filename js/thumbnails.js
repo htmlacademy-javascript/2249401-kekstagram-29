@@ -1,4 +1,4 @@
-// import { openBigPictureModal } from './modal.js';
+import { openPictureModal } from './modal.js';
 
 const thumbnailElement = document.querySelector('.pictures');
 const thumbnailTemplate = document.querySelector('#picture').content.querySelector('.picture');
@@ -12,7 +12,7 @@ const createThumbnailElement = ({ url, likes, comments, description }) => {
 
 
   // Добавляем обработчик события для открытия модального окна
-  // element.addEventListener('click', () => openBigPictureModal(url, likes, comments, description));
+  element.addEventListener('click', () => openPictureModal(url, likes, comments, description));
 
   return element;
 };
