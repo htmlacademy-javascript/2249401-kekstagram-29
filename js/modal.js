@@ -14,11 +14,13 @@ const commentsContainer = openedPicture.querySelector('.social__comments');
 const commentElement = openedPicture.querySelector('.social__comment');
 const commentCountElement = openedPicture.querySelector('.social__comment-count');
 const commentLoader = openedPicture.querySelector('.comments-loader');
+let onLoaderClick;
 
 const closeModal = () => {
   document.body.classList.remove('modal-open');
   openedPicture.classList.add('hidden');
 
+  commentLoader.removeEventListener('click', onLoaderClick);
   document.removeEventListener('keydown', onDocumentKeydown);
 };
 
@@ -55,7 +57,6 @@ const renderComments = (comments) => commentsContainer.append(...comments.map(cr
 
 const clearComments = () => (commentsContainer.innerHTML = '');
 
-
 const editComments = (comments) => {
   let shownComments = 0;
 
@@ -78,7 +79,7 @@ const editComments = (comments) => {
 
   showNextComments();
 
-  const onLoaderClick = () => showNextComments();
+  onLoaderClick = () => showNextComments();
   commentLoader.addEventListener('click', onLoaderClick);
 };
 
