@@ -14,6 +14,8 @@ const commentsContainer = openedPicture.querySelector('.social__comments');
 const commentElement = openedPicture.querySelector('.social__comment');
 const commentCountElement = openedPicture.querySelector('.social__comment-count');
 const commentLoader = openedPicture.querySelector('.comments-loader');
+
+const clearComments = () => (commentsContainer.innerHTML = '');
 let onLoaderClick;
 
 const closeModal = () => {
@@ -53,36 +55,6 @@ const createComment = ({ name, avatar, message }) => {
   return newComment;
 };
 
-const renderComments = (comments) => commentsContainer.append(...comments.map(createComment));
-
-const clearComments = () => (commentsContainer.innerHTML = '');
-
-const editComments = (comments) => {
-  let shownComments = 0;
-
-  const showNextComments = () => {
-    clearComments();
-    const nextComments = comments.slice(shownComments, shownComments + COMMENTS_PER_PORTION);
-    const commentElements = nextComments.map(createComment);
-    commentsContainer.append(...commentElements);
-
-    shownComments += COMMENTS_PER_PORTION;
-
-    if (shownComments >= comments.length) {
-      commentLoader.classList.add('hidden');
-    } else {
-      commentLoader.classList.remove('hidden');
-    }
-
-    commentCountElement.textContent = `${Math.min(shownComments, comments.length)} из ${commentsCount.textContent}`;
-  };
-
-  showNextComments();
-
-  onLoaderClick = () => showNextComments();
-  commentLoader.addEventListener('click', onLoaderClick);
-};
-
 const openPictureModal = (url, likes, comments, description) => {
   document.body.classList.add('modal-open');
   openedPicture.classList.remove('hidden');
@@ -90,15 +62,36 @@ const openPictureModal = (url, likes, comments, description) => {
   thumbnailImage.src = url;
   thumbnailImage.alt = description;
   likesCount.textContent = likes;
-  commentsCount.textContent = comments.length;
   socialCaptionElement.textContent = description;
 
   clearComments();
-  renderComments(comments);
-  editComments(comments);
+  let shownComments = 0; // Используем локальную переменную для отслеживания показанных комментариев
 
+  const updateCommentInfo = () => {
+    commentsCount.textContent = comments.length;
+    commentCountElement.textContent = `${Math.min(shownComments, comments.length)} из ${commentsCount.textContent}`;
+    if (shownComments >= comments.length) {
+      commentLoader.classList.add('hidden');
+    } else {
+      commentLoader.classList.remove('hidden');
+    }
+  };
+
+  onLoaderClick = () => {
+    const nextComments = comments.slice(shownComments, shownComments + COMMENTS_PER_PORTION);
+    const commentElements = nextComments.map(createComment);
+    commentsContainer.append(...commentElements);
+
+    shownComments += COMMENTS_PER_PORTION;
+    updateCommentInfo();
+  };
+
+  updateCommentInfo(); // Обновляем информацию о комментариях и состоянии кнопки загрузки перед открытием фотографии
+  commentLoader.removeEventListener('click', onLoaderClick);
+  commentLoader.addEventListener('click', onLoaderClick);
   document.addEventListener('keydown', onDocumentKeydown);
-};
 
+  onLoaderClick();
+};
 
 export { openPictureModal };
