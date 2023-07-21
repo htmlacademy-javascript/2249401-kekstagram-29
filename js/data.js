@@ -39,7 +39,7 @@ const createObjects = () => {
   const createdObjects = [];
 
   for (let i = 0; i < 25; i++) {
-    const id = getPhotoID();
+    const id = getPhotoID(); // i + 1;
     const url = `photos/${id}.jpg`;
 
     const newObject = {
