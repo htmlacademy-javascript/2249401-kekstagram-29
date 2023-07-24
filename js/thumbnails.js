@@ -9,10 +9,13 @@ const createThumbnailElement = ({ url, likes, comments, description }) => {
   element.querySelector('.picture__likes').textContent = likes;
   element.querySelector('.picture__comments').textContent = comments.length;
   element.querySelector('.picture__img').alt = description;
-
+  element.href = url;
 
   // Добавляем обработчик события для открытия модального окна
-  element.addEventListener('click', () => openPictureModal(url, likes, comments, description));
+  element.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    openPictureModal(url, likes, comments, description);
+  });
 
   return element;
 };
