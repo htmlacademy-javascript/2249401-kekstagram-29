@@ -1,4 +1,6 @@
 import { isEscapeKey } from './utils.js';
+import { initScale, resetScale } from './scale.js';
+import { initEffects, resetEffects } from './slider.js';
 
 const HASHTAG_MAX_COUNT = 5;
 const TAG_ERROR_TEXT = 'Неправильно введены хештеги';
@@ -30,6 +32,7 @@ const validateTags = (value) => {
 
 const closeUploadedImage = () => {
   form.reset();
+  resetScale();
   pristine.reset();
   uploadOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
@@ -38,8 +41,8 @@ const closeUploadedImage = () => {
 
 const isElementActive = () => document.activeElement === hashtagsField || document.activeElement === commentField;
 
-function onDocumentKeydown (evt) {
-  if (isEscapeKey(evt) && !isElementActive) {
+function onDocumentKeydown(evt) {
+  if (isEscapeKey(evt) && !isElementActive()) {
     evt.preventDefault();
     closeUploadedImage();
   }
@@ -48,16 +51,27 @@ function onDocumentKeydown (evt) {
 const onCloseButtonClick = closeUploadedImage;
 
 const onImageUpload = () => {
+  resetScale();
+  resetEffects();
   pristine.reset();
   uploadOverlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
-const validateForm = () => {
+const onFormSubmit = (evt) => {
+  evt.preventDefault();
+  if (pristine.validate()) {
+    form.submit();
+  }
+};
 
+const validateForm = () => {
+  initScale();
+  initEffects();
   pristine.addValidator(hashtagsField, validateTags, TAG_ERROR_TEXT);
 
+  form.addEventListener('submit', onFormSubmit);
   uploadInput.addEventListener('change', onImageUpload);
   uploadCancel.addEventListener('click', onCloseButtonClick);
 };
