@@ -61,8 +61,19 @@ const onImageUpload = () => {
 
 const onFormSubmit = (evt) => {
   evt.preventDefault();
-  if (pristine.validate()) {
+
+  const isValid = pristine.validate();
+  if (isValid) {
     form.submit();
+    const formData = new FormData(evt.target);
+
+    fetch(
+      'https://29.javascript.pages.academy/kekstagram',
+      {
+        method: 'POST',
+        body: formData,
+      },
+    );
   }
 };
 

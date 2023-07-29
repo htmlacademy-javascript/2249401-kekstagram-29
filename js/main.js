@@ -1,7 +1,9 @@
-import { createObjects } from './data.js';
 import { addThumbnail } from './thumbnails.js';
 import { validateForm } from './form.js';
+import { getData } from './api.js';
 
-const photos = createObjects();
-addThumbnail(photos);
+getData()
+  .then((photos) => {
+    addThumbnail(photos.slice(0, 25));
+  });
 validateForm();

@@ -56,27 +56,4 @@ const createObjects = () => {
   return createdObjects;
 };
 
-/*
-const createObjects = () => {
-  const createdObjects = [];
-
-  for (let i = 0; i <= 25; i++) {
-    const id = i + 1;
-    const url = `photos/${i + 1}.jpg`;
-  }
-
-  const newObject = () => ({
-    id: id,
-    url: url,
-    description: 'Это картинка в Кекстаграмме',
-    likes: getUniqueInteger(15, 200)(),
-    comments: createComments(),
-  });
-
-  createdObjects.push(newObject);
-
-  return createdObjects;
-};
- */
-
 export { createObjects };
