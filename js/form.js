@@ -10,10 +10,15 @@ const form = document.querySelector('.img-upload__form');
 const uploadInput = document.querySelector('.img-upload__input');
 const uploadOverlay = document.querySelector('.img-upload__overlay');
 const uploadCancel = document.querySelector('.img-upload__cancel');
-// const uploadSubmit = document.querySelector('.img-upload__submit');
+const uploadSubmit = document.querySelector('.img-upload__submit');
 
 const hashtagsField = document.querySelector('.text__hashtags');
 const commentField = document.querySelector('.text__description');
+
+const SubmitButtonText = {
+  IDLE: 'Опубликовать',
+  SENDING: 'Публикую...'
+};
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
@@ -50,6 +55,16 @@ function onDocumentKeydown(evt) {
 
 const onCloseButtonClick = closeUploadedImage;
 
+const blockSubmitButton = () => {
+  uploadSubmit.disabled = true;
+  uploadSubmit.textContent = SubmitButtonText.SENDING;
+};
+
+const unblockSubmitButton = () => {
+  uploadSubmit.disabled = false;
+  uploadSubmit.textContent = SubmitButtonText.IDLE;
+};
+
 const onImageUpload = () => {
   resetScale();
   resetEffects();
@@ -59,32 +74,25 @@ const onImageUpload = () => {
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
-const onFormSubmit = (evt) => {
-  evt.preventDefault();
-
-  const isValid = pristine.validate();
-  if (isValid) {
-    form.submit();
-    const formData = new FormData(evt.target);
-
-    fetch(
-      'https://29.javascript.pages.academy/kekstagram',
-      {
-        method: 'POST',
-        body: formData,
-      },
-    );
-  }
-};
-
-const validateForm = () => {
+const validateForm = (handleData) => {
   initScale();
   initEffects();
   pristine.addValidator(hashtagsField, validateTags, TAG_ERROR_TEXT);
 
-  form.addEventListener('submit', onFormSubmit);
+  form.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    const isValid = pristine.validate();
+    if (isValid) {
+      const formData = new FormData(evt.target);
+      handleData(formData)
+        .finally(unblockSubmitButton);
+    }
+  }
+  );
+
   uploadInput.addEventListener('change', onImageUpload);
   uploadCancel.addEventListener('click', onCloseButtonClick);
 };
 
-export { validateForm };
+export { validateForm, closeUploadedImage, blockSubmitButton, unblockSubmitButton };

@@ -1,7 +1,6 @@
 const BASE_URL = 'https://29.javascript.pages.academy/kekstagram';
 const Route = {
   GET_DATA: '/data',
-  POST_DATA: '',
 };
 const Method = {
   GET: 'GET',
@@ -12,7 +11,7 @@ const ErrorText = {
   SEND_DATA: 'Не удалось отправить форму. Попробуйте ещё раз',
 };
 
-const loadData = (route = null, errorText, method, body = null) =>
+const loadData = (route = null, errorText, onError, method, body = null) =>
   fetch(`${BASE_URL}${route}`, { method, body })
     .then((response) => {
       if (!response.ok) {
@@ -20,12 +19,12 @@ const loadData = (route = null, errorText, method, body = null) =>
       }
       return response.json();
     })
-    .catch(() => {
-      throw new Error(errorText);
+    .catch((err) => {
+      onError(`${errorText}. ${err.message}`);
     });
 
-const getData = (onSuccess) => loadData(Route.GET_DATA, ErrorText.GET_DATA, Method.GET, onSuccess);
+const getData = (onSuccess, onError) => loadData(Route.GET_DATA, ErrorText.GET_DATA, Method.GET, onSuccess, onError);
 
-const sendData = (body) => loadData(Route.SEND_DATA, ErrorText.SEND_DATA, Method.POST, body);
+const sendData = (onSuccess, onError, body) => loadData(ErrorText.SEND_DATA, Method.POST, onSuccess, onError, body);
 
 export { getData, sendData };
