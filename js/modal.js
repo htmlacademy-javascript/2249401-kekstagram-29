@@ -6,13 +6,13 @@ const openedPicture = document.querySelector('.big-picture');
 const thumbnailImage = openedPicture.querySelector('img');
 const likesCount = openedPicture.querySelector('.likes-count');
 const commentsCount = openedPicture.querySelector('.comments-count');
+const commentsShown = openedPicture.querySelector('.comments-shown');
 const socialCaptionElement = openedPicture.querySelector('.social__caption');
 
 const closeButton = openedPicture.querySelector('.big-picture__cancel');
 
 const commentsContainer = openedPicture.querySelector('.social__comments');
 const commentElement = openedPicture.querySelector('.social__comment');
-const commentCountElement = openedPicture.querySelector('.social__comment-count');
 const commentLoader = openedPicture.querySelector('.comments-loader');
 
 const clearComments = () => (commentsContainer.innerHTML = '');
@@ -69,7 +69,7 @@ const openPictureModal = (url, likes, comments, description) => {
 
   const updateCommentInfo = () => {
     commentsCount.textContent = comments.length;
-    commentCountElement.textContent = `${Math.min(shownComments, comments.length)} из ${commentsCount.textContent}`;
+    commentsShown.textContent = Math.min(shownComments, comments.length);
     if (shownComments >= comments.length) {
       commentLoader.classList.add('hidden');
     } else {

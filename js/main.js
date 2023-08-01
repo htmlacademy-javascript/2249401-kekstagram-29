@@ -22,9 +22,21 @@ const onSendDataError = (err) => {
   unblockSubmitButton();
 };
 
+const setActiveButton = (activeButton) => {
+  const filterButtons = document.querySelectorAll('.img-filters__button');
+
+  filterButtons.forEach((button) => {
+    button.classList.remove('img-filters__button--active');
+  });
+
+  activeButton.classList.add('img-filters__button--active');
+};
+
+
 const setDefaultFilter = (photos) => {
   filterButtonDefault.addEventListener('click', debounce(() => {
     addThumbnail(photos);
+    setActiveButton(filterButtonDefault);
   }));
 };
 
@@ -32,6 +44,7 @@ const setRandomFilter = (photos) => {
   filterButtonRandom.addEventListener('click', debounce(() => {
     const randomPhotos = photos.slice().sort(() => Math.random() - 0.5).slice(0, 10);
     addThumbnail(randomPhotos);
+    setActiveButton(filterButtonRandom);
   }));
 };
 
@@ -39,6 +52,7 @@ const setDiscussedFilter = (photos) => {
   filterButtonDiscussed.addEventListener('click', debounce(() => {
     const sortedPhotos = photos.slice().sort((a, b) => b.comments.length - a.comments.length);
     addThumbnail(sortedPhotos);
+    setActiveButton(filterButtonDiscussed);
   }));
 };
 

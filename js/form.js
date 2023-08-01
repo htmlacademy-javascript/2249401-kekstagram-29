@@ -37,19 +37,31 @@ const validateTags = (value) => {
   return hasValidateCount(tags) && hasUniqueTags(tags) && tags.every(isValidTag);
 };
 
+const onLocalPicturePreview = () => {
+  const file = uploadInput.files[0];
+  const fileName = file.name.toLowerCase();
+  const matches = FILE_TYPES.some((type) => fileName.endsWith(type));
+  if (matches) {
+    imagePreview.src = URL.createObjectURL(file);
+  }
+};
+
+const isUploadOverlayVisible = () => !uploadOverlay.classList.contains('hidden');
+const isElementActive = () => document.activeElement === hashtagsField || document.activeElement === commentField;
+
 const closeUploadedImage = () => {
   form.reset();
   resetScale();
   pristine.reset();
-  uploadOverlay.classList.add('hidden');
+  if (isUploadOverlayVisible()) {
+    uploadOverlay.classList.add('hidden');
+  }
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeydown);
 };
 
-const isElementActive = () => document.activeElement === hashtagsField || document.activeElement === commentField;
-
 function onDocumentKeydown(evt) {
-  if (isEscapeKey(evt) && !isElementActive()) {
+  if (isEscapeKey(evt) && !isElementActive() && isUploadOverlayVisible()) {
     evt.preventDefault();
     closeUploadedImage();
   }
@@ -67,23 +79,15 @@ const unblockSubmitButton = () => {
   uploadSubmit.textContent = SubmitButtonText.IDLE;
 };
 
-const onLocalPicturePreview = () => {
-  const file = uploadInput.files[0];
-  const fileName = file.name.toLowerCase();
-  const matches = FILE_TYPES.some((type) => fileName.endsWith(type));
-  if (matches) {
-    imagePreview.src = URL.createObjectURL(file);
-  }
-};
-
 const onImageUpload = () => {
   resetScale();
   resetEffects();
   pristine.reset();
-  uploadInput.removeEventListener('change', onLocalPicturePreview);
-  uploadOverlay.classList.remove('hidden');
-  document.body.classList.add('modal-open');
-  document.addEventListener('keydown', onDocumentKeydown);
+  if (uploadOverlay) {
+    uploadOverlay.classList.remove('hidden');
+    document.body.classList.add('modal-open');
+    document.addEventListener('keydown', onDocumentKeydown);
+  }
 };
 
 const validateForm = (handleData) => {
