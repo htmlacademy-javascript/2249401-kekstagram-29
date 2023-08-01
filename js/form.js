@@ -5,12 +5,14 @@ import { initEffects, resetEffects } from './slider.js';
 const HASHTAG_MAX_COUNT = 5;
 const TAG_ERROR_TEXT = 'Неправильно введены хештеги';
 const HASHTAG_RULES = /^#[a-zа-яё0-9]{1,19}$/i;
+const FILE_TYPES = ['jpg', 'jpeg', 'png'];
 
 const form = document.querySelector('.img-upload__form');
 const uploadInput = document.querySelector('.img-upload__input');
 const uploadOverlay = document.querySelector('.img-upload__overlay');
 const uploadCancel = document.querySelector('.img-upload__cancel');
 const uploadSubmit = document.querySelector('.img-upload__submit');
+const imagePreview = document.querySelector('.img-upload__preview img');
 
 const hashtagsField = document.querySelector('.text__hashtags');
 const commentField = document.querySelector('.text__description');
@@ -65,10 +67,20 @@ const unblockSubmitButton = () => {
   uploadSubmit.textContent = SubmitButtonText.IDLE;
 };
 
+const onLocalPicturePreview = () => {
+  const file = uploadInput.files[0];
+  const fileName = file.name.toLowerCase();
+  const matches = FILE_TYPES.some((type) => fileName.endsWith(type));
+  if (matches) {
+    imagePreview.src = URL.createObjectURL(file);
+  }
+};
+
 const onImageUpload = () => {
   resetScale();
   resetEffects();
   pristine.reset();
+  uploadInput.removeEventListener('change', onLocalPicturePreview);
   uploadOverlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
   document.addEventListener('keydown', onDocumentKeydown);
@@ -91,6 +103,7 @@ const validateForm = (handleData) => {
   }
   );
 
+  uploadInput.addEventListener('change', onLocalPicturePreview);
   uploadInput.addEventListener('change', onImageUpload);
   uploadCancel.addEventListener('click', onCloseButtonClick);
 };
