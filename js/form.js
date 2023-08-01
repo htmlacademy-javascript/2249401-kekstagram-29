@@ -93,7 +93,12 @@ const onImageUpload = () => {
 const validateForm = (handleData) => {
   initScale();
   initEffects();
-  pristine.addValidator(hashtagsField, validateTags, TAG_ERROR_TEXT);
+  pristine.addValidator(hashtagsField, (value) => {
+    if (value.trim().length === 0) {
+      return true;
+    }
+    return validateTags(value);
+  }, TAG_ERROR_TEXT);
 
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
