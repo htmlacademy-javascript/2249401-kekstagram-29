@@ -103,6 +103,7 @@ const validateForm = (handleData) => {
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
 
+    blockSubmitButton();
     const isValid = pristine.validate();
     if (isValid) {
       const formData = new FormData(evt.target);
