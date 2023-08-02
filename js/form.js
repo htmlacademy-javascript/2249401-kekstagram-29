@@ -1,6 +1,7 @@
 import { isEscapeKey } from './utils.js';
 import { initScale, resetScale } from './scale.js';
 import { initEffects, resetEffects } from './slider.js';
+import { showErrorUploadMessage } from './error.js';
 
 const HASHTAG_MAX_COUNT = 5;
 const TAG_ERROR_TEXT = 'Неправильно введены хештеги';
@@ -8,14 +9,14 @@ const HASHTAG_RULES = /^#[a-zа-яё0-9]{1,19}$/i;
 const FILE_TYPES = ['jpg', 'jpeg', 'png'];
 
 const form = document.querySelector('.img-upload__form');
-const uploadInput = document.querySelector('.img-upload__input');
-const uploadOverlay = document.querySelector('.img-upload__overlay');
-const uploadCancel = document.querySelector('.img-upload__cancel');
-const uploadSubmit = document.querySelector('.img-upload__submit');
-const imagePreview = document.querySelector('.img-upload__preview img');
+const uploadInput = form.querySelector('.img-upload__input');
+const uploadOverlay = form.querySelector('.img-upload__overlay');
+const uploadCancel = form.querySelector('.img-upload__cancel');
+const uploadSubmit = form.querySelector('.img-upload__submit');
+const imagePreview = form.querySelector('.img-upload__preview img');
 
-const hashtagsField = document.querySelector('.text__hashtags');
-const commentField = document.querySelector('.text__description');
+const hashtagsField = form.querySelector('.text__hashtags');
+const commentField = form.querySelector('.text__description');
 
 const SubmitButtonText = {
   IDLE: 'Опубликовать',
@@ -109,6 +110,9 @@ const validateForm = (handleData) => {
       const formData = new FormData(evt.target);
       handleData(formData)
         .finally(unblockSubmitButton);
+    } else {
+      showErrorUploadMessage(TAG_ERROR_TEXT);
+      unblockSubmitButton();
     }
   }
   );
