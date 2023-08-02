@@ -11,9 +11,7 @@ const filterButtonDiscussed = document.querySelector('.img-filters__button#filte
 
 const onSendDataSuccess = () => {
   blockSubmitButton();
-  setTimeout(() => {
-    showSuccessUploadMessage();
-  }, 500);
+  showSuccessUploadMessage();
   closeUploadedImage();
 };
 
